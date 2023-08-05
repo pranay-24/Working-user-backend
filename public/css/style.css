@@ -1,0 +1,53 @@
+html{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+height:100vh;
+width:100vw;
+background-color: bisque;
+}
+header{
+background-color:beige;
+text-align:left;
+font-size:25px;
+
+}
+
+/* header a{
+position:fixed;
+top:0;
+text-decoration: none;
+color:black;
+} */
+
+.container{
+    margin-top:100px;
+}
+.catalogue{
+display:flex;
+flex-direction: column;
+gap:30px;
+
+justify-content: center;
+align-items: center;
+}
+
+.product{
+width:400px;
+}
+
+.product img{
+width:100%;
+height:auto;
+
+}
+.product p {
+font-size:25px;
+}
+footer{
+position:fixed;
+bottom:0;
+}

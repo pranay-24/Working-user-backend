@@ -1,0 +1,36 @@
+extends layout
+
+block main-content
+      section.hero
+        h2 Discover the Best Deals
+        p Shop our wide selection of products and find great discounts!
+        a.button(href="#") Browse Products
+      section.featured-products
+        h2 Featured Products
+        .product-list
+          .product
+            img(src="/image/bbq1.jpg", alt="Product 1").product-card
+            h3 Barbeque 1
+            p $199.99
+            a.button(href="#") Add to Cart
+          .product
+            img(src="/image/bbq2.jpg", alt="Product 2").product-card
+            h3 Barbeque 2
+            p $299.99
+            a.button(href="#") Add to Cart
+          .product
+            img(src="/image/bbq3.jpg", alt="Product 3").product-card
+            h3 Barbeque 3
+            p $399.99
+            a.button(href="#") Add to Cart
+      section.testimonials
+        h2 What Our Customers Say
+        .testimonial
+          blockquote
+            p "I love this site! The products are amazing, and the prices are unbeatable."
+          cite - Happy Customer
+        .testimonial
+          blockquote
+            p "I've never seen such a great selection of products anywhere else. Highly recommend!"
+          cite - Satisfied Shopper
+    

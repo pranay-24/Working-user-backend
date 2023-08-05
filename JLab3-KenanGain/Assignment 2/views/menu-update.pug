@@ -1,0 +1,16 @@
+extends layout 
+
+block main-content
+    h1 Update menu link
+    form(method="post", action="/admin/menu/update/submit")
+        div
+            label(for="name") Link Name:
+            input(type="text", name="name", id="name" value=selectedMenu.name)
+        div
+            label(for="path") Link Path(URL):
+            input(type="text", name="path", id="path" value=selectedMenu.path)
+        div
+            label(for="weight") Link Weight:
+            input(type="number", name="weight", id="weight" value=selectedMenu.weight)
+        div
+            button(type="submit") Update Link
