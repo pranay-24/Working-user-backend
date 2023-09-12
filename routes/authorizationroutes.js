@@ -8,6 +8,7 @@ var fetchuser = require('../middleware/fetchuser');
 
 const JWT_SECRET = 'Capstone2023';
 
+//Create user route is userroutes.js
 // ROUTE 1: Create a User using: POST "/api/auth/createuser". No login required
 router.post('/createuser', [
     body('name').isLength({ min: 2 }).withMessage('Name is required'),
