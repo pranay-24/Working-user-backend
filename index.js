@@ -1,14 +1,15 @@
 const express = require('express')
 require('dotenv').config()
 const bodyParser = require('body-parser');
-
+const bcrypt = require('bcryptjs');
 const path = require ('path')
 const { MongoClient, ObjectId } = require("mongodb");
 
+const User = require('./model/User')
 const client = new MongoClient(process.env.MONGO_URL)
 //setup express server
 const app = express()
-
+const { body, validationResult } = require('express-validator');
 
 // set up views
 app.set('views',path.join(__dirname,"views"))
@@ -30,13 +31,7 @@ let dbUrl = process.env.MONGO_URL1;
 
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-  email: String,
-  name: String,
-  password: String,
-});
 
-const User = mongoose.model('User', userSchema);
 
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
@@ -49,9 +44,10 @@ db1.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.get("/",async(req,res)=>{
     let links = await getAllLinks();
+    let users = await getUsers();
 // res.status('200').send('Hello World')
 // res.render("template",{title:"E-commerce Website"});
-res.render("index",{ title: "Home" , menu: links });
+res.render("index",{ title: "Home" , menu: links, users: users });
 })
 
 // GET all users
@@ -65,7 +61,19 @@ app.get('/api/users', async (req, res) => {
     }
   });
 
-  app.post('/api/users', async (req, res) => {
+  app.post('/api/users',[
+    body('name').isLength({ min: 2 }).withMessage('Name is required'),
+    body('email').isEmail().withMessage('Invalid email'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('role').isIn(['Supervisor', 'Staging', 'AV' , 'Security', 'Server']).withMessage('Invalid role'),
+  ], async (req, res) => {
+      //Validation
+    const errors = validationResult (req);
+
+    if(!errors.isEmpty()){
+      res.status(400).json({errors:errors.array()});
+    }
+
   try {
     const newUser = req.body;
     const user = await User.create(newUser);
@@ -77,7 +85,19 @@ app.get('/api/users', async (req, res) => {
 });
 
 // PUT update user
-app.put('/api/users/:id', async (req, res) => {
+app.put('/api/users/:id',[
+    body('name').isLength({ min: 2 }).withMessage('Name is required'),
+    body('email').isEmail().withMessage('Invalid email'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('role').isIn(['Supervisor', 'Staging', 'AV' , 'Security', 'Server']).withMessage('Invalid role'),
+  ], async (req, res) => {
+    //Validation
+    const errors = validationResult (req);
+
+    if(!errors.isEmpty()){
+      res.status(400).json({errors:errors.array()});
+    }
+
   try {
     const id = req.params.id;
     const updatedUser = req.body;
@@ -173,6 +193,20 @@ async function connection() {
     db = client.db("testdb");
     // console.log('database connected')
     return db;
+}
+
+async function connection1() {
+
+  db = client.db("testdb1");
+  // console.log('database connected')
+  return db;
+}
+
+async function getUsers(){
+db = await connection1 ();
+var results  = db.collection("users").find({});
+resultsArray = await results.toArray();
+return resultsArray
 }
 
 async function getAllLinks() {
