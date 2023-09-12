@@ -3,6 +3,9 @@ const router = express.Router()
 const bcrypt = require('bcryptjs');
 const User = require('../model/User')
 const { body, validationResult } = require('express-validator');
+var jwt = require('jsonwebtoken');
+
+const JWT_SECRET = 'Capstone2023';
 
 // GET all users
 router.get('/users', async (req, res) => {
@@ -29,13 +32,31 @@ router.get('/users', async (req, res) => {
     }
 
   try {
+    let user = await User.findOne({ email: req.body.email });
+    if (user) {
+        return res.status(400).json({ error: "Sorry a user with this email already exists" })
+      }
+
     const newUser = req.body;
-    const user = await User.create(newUser);
-    res.status(200).json({message:'new user created'});
+    user = await User.create(newUser);
+
+    const data = {
+        user: {
+          id: user.id
+        }
+      }
+      const authtoken = jwt.sign(data, JWT_SECRET);
+
+
+    res.status(200).json({message:'new user created', authtoken });
+
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
+
+
 });
 
 // PUT update user

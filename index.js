@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const path = require ('path')
 const { MongoClient, ObjectId } = require("mongodb");
 const userroutes = require ('./routes/userroutes')
+const authorizationroutes = require ('./routes/authorizationroutes')
 const User = require('./model/User')
 const client = new MongoClient(process.env.MONGO_URL)
 //setup express server
@@ -23,6 +24,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
 app.use('/userapi',userroutes)
+app.use('/authapi',authorizationroutes)
 
 
 
