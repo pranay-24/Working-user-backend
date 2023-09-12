@@ -1,12 +1,12 @@
-const { Timestamp } = require('mongodb');
+
 const mongoose = require('mongoose');
 
 const rooms = {
-    MusicRoom:'MusicRoom',
-    GreatHall:'GreatHall',
-    Quad:'Quad',
-    EastCommonRoom:'EastCommonRoom',
-    SouthSittingRoom: 'SouthSittingRoom',
+    Hall1:'Hall1',
+    Hall2:'Hall2',
+    Hall3:'Hall3',
+    Hall4:'Hall4',
+    Hall5: 'Hall5',
   }
 
 
@@ -23,7 +23,7 @@ const eventSchema = new mongoose.Schema({
     room:{type:String,
         enum:Object.values(rooms),
         required:true},
-    
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   });
 
-  module.exports =  mongoose.model('User', userSchema);
+  module.exports =  mongoose.model('Event', eventSchema);
