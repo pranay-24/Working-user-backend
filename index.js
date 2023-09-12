@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const path = require ('path')
 const { MongoClient, ObjectId } = require("mongodb");
-
+const userroutes = require ('./routes/userroutes')
 const User = require('./model/User')
 const client = new MongoClient(process.env.MONGO_URL)
 //setup express server
@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
-
+app.use('/userapi',userroutes)
 
 
 
@@ -42,6 +42,8 @@ mongoose.connect(dbUrl, {
 const db1 = mongoose.connection;
 db1.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+
+
 app.get("/",async(req,res)=>{
     let links = await getAllLinks();
     let users = await getUsers();
@@ -50,76 +52,7 @@ app.get("/",async(req,res)=>{
 res.render("index",{ title: "Home" , menu: links, users: users });
 })
 
-// GET all users
-app.get('/api/users', async (req, res) => {
-    try {
-      const users = await User.find();
-      res.json(users);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
 
-  app.post('/api/users',[
-    body('name').isLength({ min: 2 }).withMessage('Name is required'),
-    body('email').isEmail().withMessage('Invalid email'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-    body('role').isIn(['Supervisor', 'Staging', 'AV' , 'Security', 'Server']).withMessage('Invalid role'),
-  ], async (req, res) => {
-      //Validation
-    const errors = validationResult (req);
-
-    if(!errors.isEmpty()){
-      res.status(400).json({errors:errors.array()});
-    }
-
-  try {
-    const newUser = req.body;
-    const user = await User.create(newUser);
-    res.status(200).json({message:'new user created'});
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// PUT update user
-app.put('/api/users/:id',[
-    body('name').isLength({ min: 2 }).withMessage('Name is required'),
-    body('email').isEmail().withMessage('Invalid email'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-    body('role').isIn(['Supervisor', 'Staging', 'AV' , 'Security', 'Server']).withMessage('Invalid role'),
-  ], async (req, res) => {
-    //Validation
-    const errors = validationResult (req);
-
-    if(!errors.isEmpty()){
-      res.status(400).json({errors:errors.array()});
-    }
-
-  try {
-    const id = req.params.id;
-    const updatedUser = req.body;
-    await User.findByIdAndUpdate(id, updatedUser);
-    res.json({ message: 'User updated successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// DELETE user
-app.delete('/api/users/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    await User.findByIdAndDelete(id);
-    res.json({ message: 'User deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
 //other pages --------------------------------
 

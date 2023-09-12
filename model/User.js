@@ -19,6 +19,17 @@ const role = {
       enum:Object.values(role),
       required:true,
     },
+    mobile:Number,
+    address:String,
+    emergencyFullName:String,
+    emergencyMobile:Number,
+    emergencyRelationship:String,
+    preferredHopsitalName:String,
+    preferredHopsitalAddress:String,
+    preferredHopsitalContact:Number,
+    insuranceCompany:String,
+    insuranceContact:Number,
+    insurancePolicy:String,
     uniformSize:String,
   });
 
