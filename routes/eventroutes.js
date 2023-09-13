@@ -19,6 +19,21 @@ router.get('/events', async (req, res) => {
     }
   });
 
+  //get a partic
+router.get('/events', async (req, res) => {
+    try {
+      const events = await Event.find().populate({
+        path:'users',
+        select:'name',
+      });
+      res.json(events);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+
   router.post('/events',[
     body('name').isLength({ min: 2 }).withMessage('Name is required'),
     body('room').isIn(['Hall1', 'Hall2', 'Hall3' , 'Hall4', 'Hall5']).withMessage('Invalid room'),
@@ -65,10 +80,41 @@ router.post('/events/:eventId/adduser/:userId', async (req, res) => {
         return res.status(404).json({ error: 'Event or user not found' });
       }
   
+      const existingUser = event.users.some(user => user.equals(userId));
+      if(existingUser){
+      return   res.status(400).json({error : 'User already added'})
+      }
+
       event.users.push(userId); // Add user to the event's user array
       await event.save();
   
       res.status(200).json({ message: 'User added to the event' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+router.post('/events/:eventId/removeuser/:userId', async (req, res) => {
+    try {
+      const eventId = new mongoose.Types.ObjectId(req.params.eventId);
+      const userId = new mongoose.Types.ObjectId(req.params.userId);
+  
+      const event = await Event.findById(eventId);
+      const user = await User.findById(userId);
+  
+      if (!event || !user) {
+        return res.status(404).json({ error: 'Event or user not found' });
+      }
+  
+      const existingUser = event.users.some(user => user.equals(userId));
+      if(existingUser){
+        event.users.remove(userId);
+        await event.save();
+      return   res.status(200).json({message : 'User removed successfully'})
+      }
+ 
+      
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });
