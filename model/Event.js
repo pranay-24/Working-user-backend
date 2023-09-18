@@ -24,6 +24,8 @@ const eventSchema = new mongoose.Schema({
         enum:Object.values(rooms),
         required:true},
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+
   });
 
   module.exports =  mongoose.model('Event', eventSchema);

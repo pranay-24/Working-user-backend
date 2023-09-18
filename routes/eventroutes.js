@@ -2,6 +2,8 @@ const express = require ('express')
 const router = express.Router()
 const Event = require('../model/Event')
 const User = require ('../model/User')
+const Task = require ('../model/Task')
+
 const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose')
 
@@ -19,10 +21,16 @@ router.get('/events', async (req, res) => {
     }
   });
 
-  //get a partic
-router.get('/events', async (req, res) => {
+  //get a particular event
+router.get('/events/:eventId', async (req, res) => {
     try {
-      const events = await Event.find().populate({
+      const eventId = new mongoose.Types.ObjectId(req.params.eventId);
+    const event = await Event.findById(eventId);
+
+    if(!event){
+      res.status(400).json({error:"Event not found"})
+    }
+      const events = await Event.findById(eventId).populate({
         path:'users',
         select:'name',
       });
@@ -33,6 +41,7 @@ router.get('/events', async (req, res) => {
     }
   });
 
+//add an event 
 
   router.post('/events',[
     body('name').isLength({ min: 2 }).withMessage('Name is required'),
@@ -94,7 +103,7 @@ router.post('/events/:eventId/adduser/:userId', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
-
+// remove user from event 
 router.post('/events/:eventId/removeuser/:userId', async (req, res) => {
     try {
       const eventId = new mongoose.Types.ObjectId(req.params.eventId);
@@ -121,7 +130,11 @@ router.post('/events/:eventId/removeuser/:userId', async (req, res) => {
     }
   });
 
-  
+//add task to event 
+//done in task routes 
+
+//remove task from event 
+//done in task routes 
 
 // PUT update event
 router.put('/events/:id',[

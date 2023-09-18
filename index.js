@@ -8,6 +8,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const userroutes = require ('./routes/userroutes')
 const authorizationroutes = require ('./routes/authorizationroutes')
 const eventroutes = require ('./routes/eventroutes')
+const taskroutes = require ('./routes/taskroutes')
 
 const User = require('./model/User')
 const client = new MongoClient(process.env.MONGO_URL)
@@ -29,6 +30,7 @@ app.use(express.json())
 app.use('/userapi',userroutes)
 app.use('/authapi',authorizationroutes)
 app.use('/eventapi',eventroutes)
+app.use('/taskapi',taskroutes)
 
 
 //routes
