@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require ('cors');
 require('dotenv').config()
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
@@ -19,6 +20,7 @@ const { body, validationResult } = require('express-validator');
 // set up views
 app.set('views',path.join(__dirname,"views"))
 app.set('view engine','pug')
+app.use(cors());
 
 //for server to serve static files from public folder,use another middleware
 app.use(express.static(path.join(__dirname,'public')));

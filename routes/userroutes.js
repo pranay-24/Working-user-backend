@@ -4,11 +4,13 @@ const bcrypt = require('bcryptjs');
 const User = require('../model/User')
 const { body, validationResult } = require('express-validator');
 var jwt = require('jsonwebtoken');
-
+const fetchuser = require('../middleware/fetchuser')
+const checkRole  = require('../middleware/checkRole')
+const mongoose = require ('mongoose')
 const JWT_SECRET = 'Capstone2023';
 
 // GET all users
-router.get('/users', async (req, res) => {
+router.get('/users', fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']),async (req, res) => {
     try {
       const users = await User.find();
       res.json(users);
@@ -18,7 +20,26 @@ router.get('/users', async (req, res) => {
     }
   });
 
-  router.post('/users',[
+  router.get('/users/:userId',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']), async (req, res) => {
+    try {
+      const userId = new mongoose.Types.ObjectId(req.params.userId);
+    const user = await User.findById(userId);
+
+    if(!user){
+     return res.status(400).json({error:"User not found"})
+    }
+      // const events = await Event.findById(eventId).populate({
+      //   path:'users',
+      //   select:'name',
+      // });
+      res.json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  router.post('/users',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']),[
     body('name').isLength({ min: 2 }).withMessage('Name is required'),
     body('email').isEmail().withMessage('Invalid email'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
@@ -60,7 +81,7 @@ router.get('/users', async (req, res) => {
 });
 
 // PUT update user
-router.put('/users/:id',[
+router.put('/users/:id',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']),[
     body('name').isLength({ min: 2 }).withMessage('Name is required'),
     body('email').isEmail().withMessage('Invalid email'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),

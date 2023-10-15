@@ -3,12 +3,12 @@ const router = express.Router()
 const Event = require('../model/Event')
 const User = require ('../model/User')
 const Task = require ('../model/Task')
-
+const checkRole  = require('../middleware/checkRole')
 const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose')
-
+const fetchuser = require('../middleware/fetchuser')
 // GET all events
-router.get('/events', async (req, res) => {
+router.get('/events',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']), async (req, res) => {
     try {
       const events = await Event.find().populate({
         path:'users',
@@ -22,13 +22,13 @@ router.get('/events', async (req, res) => {
   });
 
   //get a particular event
-router.get('/events/:eventId', async (req, res) => {
+router.get('/events/:eventId',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']), async (req, res) => {
     try {
       const eventId = new mongoose.Types.ObjectId(req.params.eventId);
     const event = await Event.findById(eventId);
 
     if(!event){
-      res.status(400).json({error:"Event not found"})
+    return res.status(400).json({error:"Event not found"})
     }
       const events = await Event.findById(eventId).populate({
         path:'users',
@@ -43,7 +43,7 @@ router.get('/events/:eventId', async (req, res) => {
 
 //add an event 
 
-  router.post('/events',[
+  router.post('/events',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']),[
     body('name').isLength({ min: 2 }).withMessage('Name is required'),
     body('room').isIn(['Hall1', 'Hall2', 'Hall3' , 'Hall4', 'Hall5']).withMessage('Invalid room'),
   ], async (req, res) => {

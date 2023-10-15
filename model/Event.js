@@ -22,7 +22,7 @@ const eventSchema = new mongoose.Schema({
     guestcount: Number,
     room:{type:String,
         enum:Object.values(rooms),
-        required:true},
+        required:true},//staff
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
 
