@@ -36,7 +36,7 @@ app.use('/taskapi',taskroutes)
 
 
 //routes
-let dbUrl = process.env.MONGO_URL1;
+let dbUrl = process.env.MONGO_ATLAS_URL;
 
 const mongoose = require('mongoose');
 
@@ -151,46 +151,9 @@ resultsArray = await results.toArray();
 return resultsArray
 }
 
-async function getAllLinks() {
-    db = await connection();
-    var results = db.collection("menuLinks").find({});
-    resultArray = await results.toArray();
-    return resultArray;
-}
 
-async function addMenuLink(newLink) {
-db = await connection();
-var status = await db.collection("menuLinks").insertOne(newLink);
-console.log("One link added");
-}
 
-async function deleteMenuLink(id) {
- db = await connection();
- let doc_id = { _id: new ObjectId(id) }
- let result = await db.collection("menuLinks").deleteOne(doc_id)
- console.log("One link deleted successful");
-    if (result.deletedCount == 1) {
-        console.log("A link has been deleted successfully");
-    }
-}
 
-async function getSelectedLink(linkId) {
-db = await connection();
-let result = db.collection("menuLinks").find({ _id: new ObjectId(linkId) });
-
-resultsArray = await result.toArray();
-return resultsArray[0];
-}
-
-async function updateLink(linkId, updatedLink) {
- db = await connection();
-let updateId = { _id: new ObjectId(linkId) }
-let status = await db.collection("menuLinks").updateOne(updateId,{$set: updatedLink} );
-console.log("link is updated");
-    if (status.modifiedCount === 1) {
-        console.log("link has been updated");
-    }
-}
 
 app.listen(process.env.PORT,()=>{
 console.log(`App listening at port http://localhost:${process.env.PORT}`)
