@@ -13,7 +13,7 @@ const rooms = {
 const eventSchema = new mongoose.Schema({
     name: {type:String,
         required:true},
-    date: {type:Date,
+    date: {type:Number,
         required:true},
     startFrom:{type:Date,
         required:true},

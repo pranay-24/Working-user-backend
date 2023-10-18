@@ -103,6 +103,7 @@ router.post('/events/:eventId/adduser/:userId', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+  
 // remove user from event 
 router.post('/events/:eventId/removeuser/:userId', async (req, res) => {
     try {
@@ -161,10 +162,10 @@ router.put('/events/:id',[
 
 
 // DELETE event
-router.delete('/events/:id', async (req, res) => {
+router.delete('/events/:id',fetchuser, checkRole(['Supervisor']), async (req, res) => {
     try {
       const id = req.params.id;
-      await User.findByIdAndDelete(id);
+      await Event.findByIdAndDelete(id);
       res.json({ message: 'Evnt deleted successfully' });
     } catch (error) {
       console.error(error);

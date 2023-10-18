@@ -20,6 +20,7 @@ router.get('/users', fetchuser, checkRole(['Supervisor','Staging','AV','Server',
     }
   });
 
+  //get specific user
   router.get('/users/:userId',fetchuser, checkRole(['Supervisor','Staging','AV','Server','Security']), async (req, res) => {
     try {
       const userId = new mongoose.Types.ObjectId(req.params.userId);

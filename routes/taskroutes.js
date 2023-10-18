@@ -7,7 +7,7 @@ const Event  = require ('../model/Event')
 const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose')
 
-
+const isValidObjectId = mongoose.Types.ObjectId.isValid;
 // GET all tasks associated to event  with eventId
 router.get('/tasks/:eventId', async (req, res) => {
     try {
@@ -30,9 +30,15 @@ router.get('/tasks/:eventId', async (req, res) => {
 // View task with task Id
 router.get('/tasks/taskId/:taskId', async (req, res) => {
     try {
-
-    const taskId = new mongoose.Types.ObjectId(req.params.taskId);
-    const task = await Task.findById(taskId);
+      const taskId = req.params.taskId;
+      
+      if (!isValidObjectId(taskId)) {
+        return res.status(400).json({ error: 'Invalid task ID' });
+      }
+  
+      const objectId = new mongoose.Types.ObjectId(taskId); 
+   
+    const task = await Task.findById(objectId);
 
         if(!task){
             return res.status(404).json({ error: 'task not found' });
