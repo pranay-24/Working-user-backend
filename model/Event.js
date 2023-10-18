@@ -19,7 +19,7 @@ const eventSchema = new mongoose.Schema({
          },
     endAt:{type:String,
          },
-    guestcount: Number,
+    guestcount: {type: String},
     room:{type:String,
         enum:Object.values(rooms),
         required:true},//staff
