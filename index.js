@@ -53,79 +53,79 @@ db1.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 
-app.get("/",async(req,res)=>{
-    let links = await getAllLinks();
-    let users = await getUsers();
-// res.status('200').send('Hello World')
-// res.render("template",{title:"E-commerce Website"});
-res.render("index",{ title: "Home" , menu: links, users: users });
-})
+// app.get("/",async(req,res)=>{
+//     let links = await getAllLinks();
+//     let users = await getUsers();
+// // res.status('200').send('Hello World')
+// // res.render("template",{title:"E-commerce Website"});
+// res.render("index",{ title: "Home" , menu: links, users: users });
+// })
 
 
 
-//other pages --------------------------------
+// //other pages --------------------------------
 
-app.get("/about", async (req, res) => {
-    let links = await getAllLinks();
-    console.log(links);
-    res.render("about", { title: "About" , menu: links });
-});
+// app.get("/about", async (req, res) => {
+//     let links = await getAllLinks();
+//     console.log(links);
+//     res.render("about", { title: "About" , menu: links });
+// });
 
-//Admin pages
+// //Admin pages
 
-// admin menu-list
-app.get("/admin/menu", async(req, res) => {
-let links = await getAllLinks();
-res.render("menu-list", { title: "Menu links", menu: links });
-});
+// // admin menu-list
+// app.get("/admin/menu", async(req, res) => {
+// let links = await getAllLinks();
+// res.render("menu-list", { title: "Menu links", menu: links });
+// });
 
-//admin add menu link
-app.get("/admin/menu/add", async(req, res) => {
-let links = await getAllLinks();
-res.render("menu-add", {title:'Add menu link', menu: links });
-});
+// //admin add menu link
+// app.get("/admin/menu/add", async(req, res) => {
+// let links = await getAllLinks();
+// res.render("menu-add", {title:'Add menu link', menu: links });
+// });
 
-//admin update menu link
-app.get("/admin/menu/update",async(req, res) => {
-let links= await getAllLinks();
-let selectedLink = await getSelectedLink(req.query.linkId);
-console.log( selectedLink);
-res.render("menu-update", {title: "Update menu link", menu: links,selectedMenu:selectedLink });
-});
+// //admin update menu link
+// app.get("/admin/menu/update",async(req, res) => {
+// let links= await getAllLinks();
+// let selectedLink = await getSelectedLink(req.query.linkId);
+// console.log( selectedLink);
+// res.render("menu-update", {title: "Update menu link", menu: links,selectedMenu:selectedLink });
+// });
 
 
-//admin  Submit menu links 
-app.post("/admin/menu/add/submit", async (req, res) => {
+// //admin  Submit menu links 
+// app.post("/admin/menu/add/submit", async (req, res) => {
     
-let newLink = {
-    name: req.body.name,
-    weight: req.body.weight,
-    path:req.body.path,
+// let newLink = {
+//     name: req.body.name,
+//     weight: req.body.weight,
+//     path:req.body.path,
   
- };
- await addMenuLink(newLink);
- res.redirect("/admin/menu");
-});
+//  };
+//  await addMenuLink(newLink);
+//  res.redirect("/admin/menu");
+// });
 
-//DELETE menulink route
-app.get("/admin/menu/delete", async (req, res) => {
-let id = req.query.linkId;
-await deleteMenuLink(id);
-res.redirect("/admin/menu");
-});
+// //DELETE menulink route
+// app.get("/admin/menu/delete", async (req, res) => {
+// let id = req.query.linkId;
+// await deleteMenuLink(id);
+// res.redirect("/admin/menu");
+// });
 
 
-//POST For update form
-app.post("/admin/menu/update/submit", async (req, res) => {
-let id = req.query.linkId;
-let updatedLink = {
-        name: req.body.name,
-        path: req.body.path,
-        weight: req.body.weight
-     };
-await updateLink(id, updatedLink);
-res.redirect("/admin/menu");
-});
+// //POST For update form
+// app.post("/admin/menu/update/submit", async (req, res) => {
+// let id = req.query.linkId;
+// let updatedLink = {
+//         name: req.body.name,
+//         path: req.body.path,
+//         weight: req.body.weight
+//      };
+// await updateLink(id, updatedLink);
+// res.redirect("/admin/menu");
+// });
 
 
 //mongo helper functions 
