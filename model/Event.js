@@ -12,13 +12,13 @@ const rooms = {
 
 const eventSchema = new mongoose.Schema({
     name: {type:String,
-        required:true},
+       },
     date: {type:String,
-        required:true },
+         },
     startFrom:{type:String,
-        required:true },
+         },
     endAt:{type:String,
-        required:true },
+         },
     guestcount: Number,
     room:{type:String,
         enum:Object.values(rooms),
