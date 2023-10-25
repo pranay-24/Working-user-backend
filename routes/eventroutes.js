@@ -37,7 +37,7 @@ router.get('/events/:eventId',fetchuser, checkRole(['Supervisor','Staging','AV',
       res.json(events);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Internal server errors' });
     }
   });
 
